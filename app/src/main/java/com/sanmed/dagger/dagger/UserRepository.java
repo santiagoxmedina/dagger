@@ -1,7 +1,9 @@
 package com.sanmed.dagger.dagger;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class UserRepository {
 
     private final UserLocalDataSource userLocalDataSource;

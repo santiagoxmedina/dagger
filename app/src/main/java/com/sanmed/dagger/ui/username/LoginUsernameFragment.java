@@ -1,4 +1,4 @@
-package com.sanmed.dagger.ui.home;
+package com.sanmed.dagger.ui.username;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,23 +14,24 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.sanmed.dagger.LoginActivity;
 import com.sanmed.dagger.R;
-import com.sanmed.dagger.dagger.HomeInject;
 import com.sanmed.dagger.dagger.MyApplication;
+import com.sanmed.dagger.ui.LoginViewModel;
 
 import javax.inject.Inject;
 
-public class HomeFragment extends Fragment {
+public class LoginUsernameFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private LoginUsernameViewModel homeViewModel;
 
     @Inject
-    HomeInject homeInject;
+    LoginViewModel loginViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+                ViewModelProviders.of(this).get(LoginUsernameViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -45,14 +46,19 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(homeInject!=null){
-            Snackbar.make(requireView(),homeInject.test(),Snackbar.LENGTH_SHORT);
-        }
+
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        ((MyApplication) requireActivity().getApplicationContext()).appComponent.inject(this);
+    public void onAttach(Context context) {
         super.onAttach(context);
+
+        // Obtaining the login graph from LoginActivity and instantiate
+        // the @Inject fields with objects from the graph
+        ((LoginActivity) getActivity()).loginComponent.inject(this);
+
+        // Now you can access loginViewModel here and onCreateView too
+        // (shared instance with the Activity and the other Fragment)
     }
+
 }

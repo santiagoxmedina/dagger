@@ -9,10 +9,18 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.sanmed.dagger.dagger.LoginComponent;
+import com.sanmed.dagger.dagger.MyApplication;
+import com.sanmed.dagger.ui.LoginViewModel;
 
-public class MainActivity extends AppCompatActivity {
+import javax.inject.Inject;
 
+public class LoginActivity extends AppCompatActivity {
 
+    public LoginComponent loginComponent;
+
+    @Inject
+    LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // Creation of the login graph using the application graph
+        loginComponent = ((MyApplication) getApplicationContext())
+                .appComponent.loginComponent().create();
+
+        // Make Dagger instantiate @Inject fields in LoginActivity
+        loginComponent.inject(loginViewModel);
 
 
 

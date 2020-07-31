@@ -1,5 +1,6 @@
-package com.sanmed.dagger.ui.dashboard;
+package com.sanmed.dagger.ui.loginpassword;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +13,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.sanmed.dagger.LoginActivity;
 import com.sanmed.dagger.R;
+import com.sanmed.dagger.ui.LoginViewModel;
 
-public class DashboardFragment extends Fragment {
+import javax.inject.Inject;
 
-    private DashboardViewModel dashboardViewModel;
+public class LoginPasswordFragment extends Fragment {
+
+    private LoginPasswordViewModel dashboardViewModel;
+    // Fields that need to be injected by the login graph
+    @Inject
+    LoginViewModel loginViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
+                ViewModelProviders.of(this).get(LoginPasswordViewModel.class);
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -31,5 +39,15 @@ public class DashboardFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        ((LoginActivity) getActivity()).loginComponent.inject(this);
+
+        // Now you can access loginViewModel here and onCreateView too
+        // (shared instance with the Activity and the other Fragment)
     }
 }

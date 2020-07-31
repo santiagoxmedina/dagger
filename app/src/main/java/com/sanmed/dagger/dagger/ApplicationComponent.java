@@ -1,10 +1,12 @@
 package com.sanmed.dagger.dagger;
 
-import com.sanmed.dagger.ui.home.HomeFragment;
+import javax.inject.Singleton;
 
 import dagger.Component;
-
-@Component
+@Singleton
+@Component(modules = {NetworkModule.class, SubcomponentsModule.class})
 public interface ApplicationComponent {
-    void inject(HomeFragment homeFragment);
+    // This function exposes the LoginComponent Factory out of the graph so consumers
+// can use it to obtain new instances of LoginComponent
+    LoginComponent.Factory loginComponent();
 }
